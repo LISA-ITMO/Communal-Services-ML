@@ -38,7 +38,7 @@ class Converter:
         return id2label, label2id, freq_full
 
     def _load_base(self, db_name, sep, encoding):
-        self.df = pd.read_csv(db_name, sep=sep, encoding=encoding)
+        self.df = pd.read_csv(os.path.join(PATH, 'Database', db_name), sep=sep, encoding=encoding)
         self.df.dropna(inplace=True)
 
         freq2 = self.df.groupby(['detailed_topic']).size().sort_values(ascending=False)
