@@ -4,3 +4,4 @@ __pycache__/
 **/**/__pycache__/
 **/db_2.csv
 **/test_texts.txt
+**/texts.py
