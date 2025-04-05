@@ -7,7 +7,7 @@ PATH = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(PATH, '..'))
 
 
-class Converters:
+class Converter:
     def __init__(self, db_name='db.csv', sep=';', encoding='utf-8', reducing_threshold=0):
         self.is_reducing = (reducing_threshold > 0)
 
@@ -41,14 +41,13 @@ class Converters:
         self.df = pd.read_csv(db_name, sep=sep, encoding=encoding)
         self.df.dropna(inplace=True)
 
-        freq2 = df.groupby(['detailed_topic']).size().sort_values(ascending=False)
+        freq2 = self.df.groupby(['detailed_topic']).size().sort_values(ascending=False)
 
         id2label, label2id, freq_full2 = self._construct_converter(freq2)
 
         self.full_label2id = label2id
         self.full_id2label = id2label
         self.freq_full2 = freq_full2
-        self.df = df
 
     def reduce_labels(self):
         labels_reduce = set()
