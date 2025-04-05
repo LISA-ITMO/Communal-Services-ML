@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.join(PATH, '..'))
 
 class Converter:
     def __init__(self, db_name='db.csv', sep=';', encoding='utf-8', reducing_threshold=0):
+        self.reducing_threshold = reducing_threshold
         self.is_reduced = (reducing_threshold > 0)
 
         self._load_base(db_name, sep, encoding)
