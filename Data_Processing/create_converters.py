@@ -72,3 +72,9 @@ class Converter:
             return self.reduced_id2label.get(seq_id, "Неизвестная тема")
 
         return self.full_id2label.get(seq_id, "Неизвестная тема")
+    
+    def get_id(self, label):
+        if self.is_reduced:
+            return self.reduced_label2id.get(label, "Неизвестная тема")
+
+        return self.full_label2id.get(label, "Неизвестная тема")
