@@ -1,9 +1,9 @@
 import os
 from Data_Processing.create_converters import Converter
 from Models.load_model import Model
-from Data_Processing.texts import texts
+from Data_Processing.texts import texts_loaded
 
-def main():
+def main(texts):
     '''
     The main function to initialize the classifier pipeline and print predictions on given input texts.
     '''
@@ -18,4 +18,22 @@ def main():
     basic_classifier.print_prediction(texts, k=5)
 
 if __name__ == "__main__":
-    main()
+    while True:
+        print("Choose mode:")
+        print("1 - Your own input")
+        print("2 - Test input")
+        print("All other - Exit")
+        print()
+
+        mode = input()
+        if mode == '1':
+            texts = [input()]
+        elif mode == '2':
+            texts = texts_loaded
+        else:
+            print("End of program.")
+            break
+            
+        main(texts)
+
+        print()
