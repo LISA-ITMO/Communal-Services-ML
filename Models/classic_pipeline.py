@@ -14,6 +14,15 @@ from Data_Processing.create_converters import Converter
 
 
 def prepare_data(converter: Converter):
+    '''
+    Prepares training and validation data for classical models by vectorizing and reducing dimensionality.
+
+            Parameters:
+                    converter (Converter): Object that contains the labeled DataFrame
+
+            Returns:
+                    dict: Dictionary containing original and reduced feature matrices and label arrays
+    '''
     data = converter.df
 
     # topic_id -> sequential label index
@@ -50,12 +59,21 @@ def prepare_data(converter: Converter):
             "Train": y_train,
             "Test": y_test
         }
-
     }
 
 
 class ClassicModels:
+    '''
+    A class to train and store predictions from multiple classical ML classifiers.
+    '''
+
     def __init__(self, converter):
+        '''
+        Initializes and trains multiple classifiers using prepared data.
+
+                Parameters:
+                        converter (Converter): Converter object to prepare labeled data
+        '''
         self.data = prepare_data(converter)
         self.predictions = {}
 
@@ -65,21 +83,33 @@ class ClassicModels:
         self.train_KNN()
 
     def train_NB(self):
+        '''
+        Trains a Multinomial Naive Bayes classifier using Binary Relevance wrapper.
+        '''
         classifier = BinaryRelevance(MultinomialNB())
         classifier.fit(self.data["X"]["Train"], self.data["Y"]["Train"])
         self.predictions["NB"] = classifier.predict_proba(self.data["X"]["Test"])
 
     def train_DT(self):
+        '''
+        Trains a Decision Tree classifier using Binary Relevance wrapper.
+        '''
         classifier = BinaryRelevance(DecisionTreeClassifier())
         classifier.fit(self.data["X"]["Train"], self.data["Y"]["Train"])
         self.predictions["DT"] = classifier.predict_proba(self.data["X"]["Test"])
 
     def train_SV(self):
+        '''
+        Trains an SVM classifier (with probability output) on reduced feature space.
+        '''
         classifier = BinaryRelevance(SVC(probability=True))
         classifier.fit(self.data["X_Reduced"]["Train"], self.data["Y"]["Train"])
         self.predictions["SVC"] = classifier.predict_proba(self.data["X_Reduced"]["Test"])
 
     def train_KNN(self):
+        '''
+        Trains a K-Nearest Neighbors classifier using MLkNN.
+        '''
         classifier = MLkNN(k=5)
         classifier.fit(self.data["X"]["Train"], self.data["Y"]["Train"])
         self.predictions["KNN"] = classifier.predict_proba(self.data["X"]["Test"])
