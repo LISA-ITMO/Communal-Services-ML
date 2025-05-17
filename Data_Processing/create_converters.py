@@ -54,7 +54,7 @@ class Converter:
         labels_reduce = set()
 
         for i in self.full_id2label.keys():
-            if self.freq_full2.loc[i]['size'] < self.frequency_threshold:
+            if self.freq_full2.loc[i]['size'] < self.reducing_threshold:
                 labels_reduce.add(i)
 
         reduced_df = self.df.copy()
@@ -62,7 +62,7 @@ class Converter:
 
         freq3 = reduced_df.groupby(['detailed_topic']).size().sort_values(ascending=False)
 
-        id2label, label2id, _ = self.construct_converter(freq3)
+        id2label, label2id, _ = self._construct_converter(freq3)
 
         self.reduced_label2id = label2id
         self.reduced_id2label = id2label

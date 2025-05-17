@@ -4,11 +4,6 @@ import numpy as np
 import torch
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-
-PATH = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(PATH, '..'))
-
-
 from Data_Processing.create_converters import Converter
 
 
