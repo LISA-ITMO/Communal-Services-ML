@@ -1,5 +1,7 @@
 import numpy as np
 from sklearn.metrics import accuracy_score, f1_score
+import matplotlib.pyplot as plt
+import pandas as pd
 
 
 def roc_auc_multiclass(labels, probabilities):
@@ -95,3 +97,40 @@ def compute_metrics_top_k(eval_pred, k=3, KNN=False):
         "roc_auc": auc,
         "f1": f1,
     }
+
+
+if __name__ == "__main__":
+    y_test = []
+    df_stat = pd.DataFrame({"Naive Bayes": compute_metrics_top_k(([], y_test)),
+           "Decision Tree": compute_metrics_top_k(([].toarray(), y_test)),
+           "Support Vector": compute_metrics_top_k(([].toarray(), y_test)),})
+           #"KNN": compute_metrics_top_k((predictions_knn.toarray(), y_test), KNN=True)})
+
+
+    # Define the metrics to plot
+    metrics = ["accuracy", "top_3_accuracy", "top_5_accuracy", "f1", "roc_auc"]
+    metrics = ["accuracy",  "top_5_accuracy", "roc_auc"]
+    df_selected = df_stat.loc[metrics]
+
+    # Plot grouped bar chart
+    plt.figure(figsize=(15, 6))
+    bar_width = 0.13  # Width of each bar
+    x = np.arange(len(metrics))  # X locations for the bars
+
+    colors = ['blue', 'green', 'yellow', 'orange', 'red', 'purple']
+    models = df_selected.columns
+
+    for i, model in enumerate(models):
+        plt.bar(x + i * bar_width, df_selected[model], width=bar_width, label=model, color=colors[i])
+
+    # Formatting the plot
+    plt.ylabel("Score")
+    plt.title("Evaluation Metrics Comparison Across Models")
+    plt.xticks(x + bar_width, metrics, rotation=30, ha='right')
+    plt.yticks(np.arange(0.1, 1.05, 0.05))
+    plt.ylim(0.1, 1)
+    plt.legend(title="Models")
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+
+    # Show plot
+    plt.show()
