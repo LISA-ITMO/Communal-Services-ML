@@ -4,7 +4,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
 from sklearn.preprocessing import MultiLabelBinarizer
 
-from skmultilearn.problem_transform import BinaryRelevance, ClassifierChain, LabelPowerset
+from skmultilearn.problem_transform import BinaryRelevance
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
@@ -62,7 +62,7 @@ def prepare_data(converter: Converter):
     }
 
 
-class ClassicModels:
+class ClassicModel:
     '''
     A class to train and store predictions from multiple classical ML classifiers.
     '''

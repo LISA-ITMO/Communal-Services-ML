@@ -130,3 +130,15 @@ class Converter:
             return self.reduced_label2id.get(label, "Неизвестная тема")
 
         return self.full_label2id.get(label, "Неизвестная тема")
+    
+    def get_num_labels(self):
+        '''
+        Returns the total number of unique labels based on whether reduction is applied.
+
+                Returns:
+                        num_labels (int): Number of label classes currently in use
+        '''
+        if self.is_reduced:
+            return len(self.reduced_label2id)
+
+        return len(self.full_label2id)

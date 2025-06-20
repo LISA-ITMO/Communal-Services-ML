@@ -1,7 +1,7 @@
 import unittest
 
 from Data_Processing.create_converters import Converter
-from Models.load_model import Model
+from Models.bert_pipeline import Model
 from Tests.test_texts import test_texts_dict
 
 REPO_NAME = "Goshective/lab_comm_services_detailed_sber"
