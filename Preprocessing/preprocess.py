@@ -52,7 +52,7 @@ def label_reducing():
 
 
 if __name__ == "__main__":
-    df = pd.read_csv(os.path.join("Database", "db_2.csv"), sep=';', encoding='utf-8')
+    df = pd.read_csv(os.path.join("Database", "raw_data.csv"), sep=';', encoding='utf-8')
     df.dropna(inplace=True)
     df.drop(columns=['topic_id', 'president_topic'], inplace=True)
 
@@ -65,9 +65,10 @@ if __name__ == "__main__":
     }
 
     frequency_dataset = split_detailed_topics()
-    clean_df = label_reducing()
+    reduced_df = label_reducing()
 
     with open(os.path.join("Assets", "converter.json"), "w", encoding='utf-8') as json_file:
         json.dump(converter_dct, json_file, ensure_ascii=False, indent=4)
     
-    clean_df.to_csv(os.path.join("Database", "clean_data.csv"), index=False)
+    # df.to_csv(os.path.join("Database", "clean_data.csv"), index=False)
+    reduced_df.to_csv(os.path.join("Database", "clean_data.csv"), sep=';', encoding='utf-8', index=False)
