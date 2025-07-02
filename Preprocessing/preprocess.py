@@ -3,7 +3,7 @@ import json
 import os
 
 
-def split_detailed_topics():
+def split_detailed_topics(df, converter_dct):
     freq2 = df.groupby(['detailed_topic']).size().sort_values(ascending=False)
 
     detailed2sequential_id = converter_dct['label2id']
@@ -25,7 +25,7 @@ def split_detailed_topics():
     return pd.DataFrame(temp_dct).set_index('topic_id')
 
 
-def label_reducing():
+def label_reducing(df, converter_dct, frequency_dataset):
     THRESHOLD = 10
 
     labels_reduce = set()
@@ -50,8 +50,7 @@ def label_reducing():
     
     return reduced_df
 
-
-if __name__ == "__main__":
+def preprocess_main(new_db_name="clean_data.cvs"):
     df = pd.read_csv(os.path.join("Database", "raw_data.csv"), sep=';', encoding='utf-8')
     df.dropna(inplace=True)
     df.drop(columns=['topic_id', 'president_topic'], inplace=True)
@@ -64,11 +63,16 @@ if __name__ == "__main__":
         'id2label_reduced': {}
     }
 
-    frequency_dataset = split_detailed_topics()
-    reduced_df = label_reducing()
+
+    frequency_dataset = split_detailed_topics(df, converter_dct)
+    reduced_df = label_reducing(df, converter_dct, frequency_dataset)
 
     with open(os.path.join("Assets", "converter.json"), "w", encoding='utf-8') as json_file:
         json.dump(converter_dct, json_file, ensure_ascii=False, indent=4)
     
     # df.to_csv(os.path.join("Database", "clean_data.csv"), index=False)
-    reduced_df.to_csv(os.path.join("Database", "clean_data.csv"), sep=';', encoding='utf-8', index=False)
+    reduced_df.to_csv(os.path.join("Database", new_db_name), sep=';', encoding='utf-8', index=False)
+
+
+if __name__ == "__main__":
+    preprocess_main()
