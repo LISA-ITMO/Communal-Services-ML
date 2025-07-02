@@ -1,13 +1,13 @@
 import unittest
 
-from main import get_classifier
+from App.main import get_classifier
 from Tests.test_texts import test_texts_dict
 
 
 class ModelsTestCase(unittest.TestCase):
     def setUp(self):
+        self.predictions = {}
         
-
         basic_classifier = get_classifier()
 
         for label, texts in test_texts_dict.items():
