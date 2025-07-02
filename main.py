@@ -2,7 +2,6 @@ import os
 import numpy as np
 import json
 import torch
-import time
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 from Preprocessing.preprocess import preprocess_main
@@ -114,9 +113,9 @@ class BertModel:
                 print()
 
 
-def main(texts):
+def get_classifier():
     '''
-    The main function to initialize the classifier pipeline and print predictions on given input texts.
+    The intermediate function to initialize the classifier pipeline.
     '''
     NEW_DB_NAME = "clean_data.csv"
     REPO_PREFIX = "Goshective"
@@ -130,14 +129,15 @@ def main(texts):
     else:
         preprocess_main(NEW_DB_NAME)
 
-    basic_classifier = BertModel(REPO_NAME, converter)
-
-    basic_classifier.print_prediction(texts, k=5)
+    return BertModel(REPO_NAME, converter)
 
 
-if __name__ == "__main__":
-    print("Classification of Appeals in the Field of Housing and Communal Inspection.")
-    print("--------------------------------------------------------------------------")
+
+def main():
+    '''
+    The main function to print predictions on given input texts
+    '''
+    basic_classifier = get_classifier()
     while True:
         print("Write Text:")
         print("(Enter - Exit)")
@@ -147,9 +147,16 @@ if __name__ == "__main__":
 
         if inp != '':
             texts = [inp]
+            basic_classifier.print_prediction(texts, k=5)
         else:
             print("End of program.")
             break
-            
-        main(texts)
         print()
+    
+    return
+
+
+if __name__ == "__main__":
+    print("Classification of Appeals in the Field of Housing and Communal Inspection.")
+    print("--------------------------------------------------------------------------")
+    main()
