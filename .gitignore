@@ -5,5 +5,4 @@ __pycache__/
 **/db_2.csv
 **/test_texts.txt
 **/texts.py
-Database/clean_data.csv
 Assets/models
