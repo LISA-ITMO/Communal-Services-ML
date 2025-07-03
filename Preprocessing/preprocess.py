@@ -50,8 +50,8 @@ def label_reducing(df, converter_dct, frequency_dataset):
     
     return reduced_df
 
-def preprocess_main(new_db_name="clean_data.cvs"):
-    df = pd.read_csv(os.path.join("Database", "raw_data.csv"), sep=';', encoding='utf-8')
+def preprocess_main(new_db_name="clean_data.csv"):
+    df = pd.read_csv(os.path.join("Database", "db_2.csv"), sep=';', encoding='utf-8')
     df.dropna(inplace=True)
     df.drop(columns=['topic_id', 'president_topic'], inplace=True)
 
