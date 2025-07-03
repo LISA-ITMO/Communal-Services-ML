@@ -119,7 +119,7 @@ def get_classifier():
     '''
     NEW_DB_NAME = "clean_data.csv"
     REPO_PREFIX = "Goshective"
-    REPO_DIR = "lab_comm_services_detailed_sber"
+    REPO_DIR = "lab_comm_services_sber_reduce"
     REPO_NAME = f"{REPO_PREFIX}/{REPO_DIR}"
     CONVERTER_PATH = 'Assets/converter.json'
 
