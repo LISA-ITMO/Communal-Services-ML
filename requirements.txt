@@ -1,5 +1,7 @@
 numpy
 pandas
+joblib
+pickle
 torch
 scikit-learn
 transformers

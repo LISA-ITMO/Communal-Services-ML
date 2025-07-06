@@ -2,32 +2,38 @@
 
 This repository explores the application of both transformer-based and classical machine learning methods for automatic classification of citizen appeals. The focus is on appeals within the domain of housing and communal services, aiming to route them accurately by identifying their **detailed topics**.
 
-The project integrates modern NLP pipelines based on BERT (via Hugging Face Transformers) alongside traditional multi-label classifiers. It includes tools for data preprocessing, model training, evaluation, and prediction, with support for handling imbalanced datasets through label reduction.
-
----
+The project integrates modern NLP pipelines based on BERT (via Hugging Face Transformers) alongside traditional multi-label classifiers. It includes tools for data preprocessing, model training, evaluation, and prediction, with support for handling imbalanced datasets through label reduction. It has both, full pipeline training and lightweight usage via precomputed model outputs.
 
 ## Repository Structure
 
 ```
-Data_Processing/
+project-root/
 │
-├── Database/db_2.csv          # Input dataset (appeal; topic_id; detailed_topic; etc.)
-├── create_converters.py       # Builds label converters
-├── get_stats.py               # Computes topic distribution stats (used in training/evaluation)
-├── load_data.py               # Loads appeal data from PostgreSQL
+├── database/                   # Dataset storage
+│   ├── raw_data.csv            # Original unprocessed dataset
+│   └── clean_data.csv          # Cleaned and label-reduced dataset
 │
-Models/
-├── bert_pipeline.py           # Transformer-based classification (Model class)
-├── classic_pipeline.py        # Classical ML pipelines (ClassicModels class)
+├── assets/                     # Precomputed outputs and converters
+│   ├── converter.json          # Label ↔ ID mappings used by models
+│   ├── classic_ml_outputs.pkl  # Evaluation and predictions from classic models
+│   └── transformer_outputs.pkl # Evaluation and predictions from transformer models
 │
-Tests/
-├── test_texts.py              # Dictionary with example test cases
-├── tests.py                   # Unit tests for model logic
+├── preprocessing/
+│   └── preprocess.py           # Converts raw data into usable format
 │
-main.py                        # Main entry point for running predictions
+├── model pipelines/
+│   ├── transformers_gpu.ipynb          # Transformer training and evaluation
+│   ├── classic_ml_fasttext.ipynb       # Classic ML and FastText training
+│   └── train_knn_only.ipynb            # (WIP) KNN-only training notebook
+│
+├── analysis/
+│   └── results_analysis.ipynb          # Visualization and performance metrics
+│
+├── app/
+│   └── main.py                         # Quick demo: load assets, predict single text
+│
+└── README.md
 ```
-
----
 
 ## How to Run
 
@@ -42,79 +48,140 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-3. **Prepare your dataset:**
+## Quick Usage (Assets Already Ready)
 
-Place the CSV file (e.g., `db_2.csv`) into `Data_Processing/Database/`. It should have the following columns:
+With `assets/*.pkl` already available:
 
-| topic_id | president_topic | detailed_topic     | appeal                            |
-|----------|------------------|---------------------|------------------------------------|
-| 102      | Social           | Infrastructure Issue| "The pavement near our house..."   |
+1. Analytics Notebook  
+   Run full comparison and visualization in **Google Colab** *(CPU runtime setting)* or from command line:
 
-4. **Run the model:**
-Edit and execute `main.py` to load the model and predict topics for test appeals:
+   ```bash
+   jupyter notebook analysis/results_analysis.ipynb
+   ```
+
+3. Fast Inference Demo (Console):
+
+   ```bash
+   python app/main.py
+   ```
+
+   Paste a text and receive the model’s prediction (one at a time).
+
+## Full Pipeline – Step-by-Step
+
+### 1. Load your dataset
+
+Format example (`raw_data.csv` in `database/`):
+
+```
+topic_id;president_topic;detailed_topic;appeal
+0;heating;central heating;The central heating doesn't work in the region
+```
+
+### 2. Run Preprocessing
+
 ```bash
-python main.py
+python preprocessing/preprocess.py
 ```
 
----
+This generates:
+- `database/clean_data.csv` → cleaned, label-reduced dataset  
+- `assets/converter.json` → contains mappings like:
 
-## Available Components
+```json
+{
+  "label2id": {"central heating": 0, "...": "..."},
+  "id2label": {"0": "central heating", "...": "..."},
 
-### Transformer-Based Classification
+  "label2id_reduced": {"central heating": 0, "...": "..."},
+  "id2label_reduced": {"0": "central heating", "...": "..."}
+}
+```
 
-- File: `Models/bert_pipeline.py`
-- Class: `Model`
-- Features:
-  - Fine-tunes a pre-trained RoBERTa model
-  - Pushes trained model to Hugging Face Hub
-  - Predicts top-k detailed topics with probability thresholding
+### 3. Train Models (via Notebooks)
 
-### Classical ML Models
+Best run in **Google Colab** *(T4 GPU for transformers, CPU for others)*
 
-- File: `Models/classic_pipeline.py`
-- Class: `ClassicModels`
-- Models included:
-  - Naive Bayes
-  - Decision Tree
-  - Support Vector Machine (SVC)
-  - k-Nearest Neighbors (MLkNN)
+#### 3.1 Transformers (2 models)
 
-These models use TF-IDF vectorization and optional SVD for dimensionality reduction.
+```bash
+jupyter notebook models/transformers_gpu.ipynb
+```
 
----
+- Loads `clean_data.csv` and `converter.json`
+- Trains 2 transformer models (change `repo_prefix` for your HF account)
+- Pushes to HF Hub
+- Evaluates and stores predictions/stats to:
+  - `assets/transformer_outputs.pkl`
 
-## Label Converter
-
-- File: `Data_Processing/create_converters.py`
-- Class: `Converter`
-- Features:
-  - Converts topic names to numerical IDs and vice versa
-  - Optional label reduction by frequency threshold
-  - Handles mappings consistently between training and prediction
-
----
-
-## Example Usage
-
+Format:
 ```python
-from Models.bert_pipeline import Model
-from Data_Processing.create_converters import Converter
-
-converter = Converter(db_name="db_2.csv", reducing_threshold=10)
-model = Model("Goshective/lab_comm_services_detailed_sber", converter)
-model.print_prediction(["The heating hasn't worked for days..."], k=5)
+{
+  "bert_base": {
+        "predictions": [...],
+        "basic_stats": {...},
+        "val_labels": [...]
+    },
+    "ruroberta": {
+        "predictions": [...],
+        "basic_stats": {...},
+    }
+}
 ```
 
----
+#### 3.2 Classic ML + FastText
 
-## Tests
+```bash
+jupyter notebook models/classic_ml_fasttext.ipynb
+```
 
-Run included unit tests using:
+- Loads `clean_data.csv` and `converter.json`
+- Trains 4 models: Naive Bayes, Decision Tree, SVM, FastText
+- Saves:
+  - Trained models → `assets/models/*.joblib` or `.bin` (not included in repo)
+  - Evaluation results → `assets/classic_ml_outputs.pkl`
+
+### 4. Analyze Results
+
+```bash
+jupyter notebook analysis/results_analysis.ipynb
+```
+
+- Loads:
+  - `converter.json`
+  - `transformer_outputs.pkl`
+  - (Optionally) `classic_ml_outputs.pkl`, `KNN_preds.csv`
+
+Shows:
+- Top-1/3/5 Accuracy, F1, ROC-AUC
+- Per-class top-k breakdown (Transformers)
+- Transformer learning curves
+- Side-by-side comparison of all models
+
+### Run Tests
 
 ```bash
 python -m unittest discover -s Tests
 ```
 
-This validates label mappings and prediction logic using provided test cases in `test_texts.py`.
+## Results
 
----
+| Model Name         | Accuracy@1 | Accuracy@3 | Accuracy@5 | F1 Score | ROC-AUC |
+|--------------------|------------|------------|------------|----------|---------|
+| BERT Base          |            |            |            |          |         |
+| RoBERTa            |            |            |            |          |         |
+| Naive Bayes        |            |            |            |          |         |
+| SVM                |            |            |            |          |         |
+| Decision Tree      |            |            |            |          |         |
+| FastText           |            |            |            |          |         |
+| KNN (optional)     |            |            |            |          |         |
+
+## Example Usage (from code)
+
+```python
+from app.main import get_classifier
+
+texts = ["There’s been no hot water in our building for a week", ...]
+clf = get_classifier()
+basic_classifier.print_prediction(texts, k=5)
+```
