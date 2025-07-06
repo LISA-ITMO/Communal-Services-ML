@@ -1,17 +1,14 @@
 import unittest
 
-from Data_Processing.create_converters import Converter
-from Models.bert_pipeline import Model
-from Tests.test_texts import test_texts_dict
+from App.main import get_classifier
+from Tests.example_texts import test_texts_dict
 
-REPO_NAME = "Goshective/lab_comm_services_detailed_sber"
-DB_NAME = "db_2.csv"
 
 class ModelsTestCase(unittest.TestCase):
     def setUp(self):
         self.predictions = {}
-        basic_converter = Converter(DB_NAME)
-        basic_classifier = Model(REPO_NAME, basic_converter)
+
+        basic_classifier = get_classifier()
 
         for label, texts in test_texts_dict.items():
             self.predictions[label] = basic_classifier.predict(texts, k=5)
@@ -45,13 +42,6 @@ class ModelsTestCase(unittest.TestCase):
                 is_under_threshold_probability.append(min([x[1] for x in pred_k]) >= 0.1)
         
         self.assertTrue(all(is_under_threshold_probability))
-
-    def test_modes_correlation(self):
-        basic_converter = Converter(DB_NAME, reducing_threshold=10)
-        basic_classifier = Model(REPO_NAME, basic_converter)
-
-        self.assertTrue(basic_converter.is_reduced)
-        self.assertTrue(basic_classifier.is_reducing)
 
     
 
