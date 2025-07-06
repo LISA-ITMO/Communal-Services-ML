@@ -6,3 +6,4 @@ __pycache__/
 **/test_texts.txt
 **/texts.py
 Assets/models
+**/.ipynb_checkpoints
