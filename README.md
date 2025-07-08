@@ -185,3 +185,33 @@ texts = ["There’s been no hot water in our building for a week", ...]
 clf = get_classifier()
 basic_classifier.print_prediction(texts, k=5)
 ```
+
+## Publications
+
+1. Skvortsov D.A., Lemanov A.A. (supervised by Fedorov D.A.)
+Comparison of Approaches to Improve the Accuracy of Complaint Classification Algorithms Using Machine Learning Methods
+// Proceedings of the Congress of Young Scientists. Electronic Edition. – St. Petersburg: ITMO University, [2025].
+https://kmu.itmo.ru/digests/article/15916
+
+2. Lemanov A.A., Skvortsov D.A. (supervised by Fedorov D.A.)
+Exploring the RAG Approach in Intelligent Question-Answering Systems
+// Proceedings of the Congress of Young Scientists. Electronic Edition. – St. Petersburg: ITMO University, [2025].
+https://kmu.itmo.ru/digests/article/16001
+
+3. Lemanov A.A., Skvortsov D.A. (supervised by Fedorov D.A.)
+Designing Agent-Based Dialogue Systems Using RAG and LLM Technologies for Text2SQL Tasks on Government Databases
+// Proceedings of the Congress of Young Scientists. Electronic Edition. – St. Petersburg: ITMO University, [2025].
+https://kmu.itmo.ru/digests/article/14107
+
+## Публикации
+
+1. Скворцов Д.А., Леманов А.А. (науч. рук. Федоров Д.А.) Сравнение подходов для повышения точности алгоритмов классификации жалоб на основе методов машинного обучения // Сборник тезисов докладов конгресса молодых ученых. Электронное издание. – СПб: Университет ИТМО, [2025]. URL: https://kmu.itmo.ru/digests/article/15916
+2. Леманов А.А., Скворцов Д.А. (науч. рук. Федоров Д.А.) Исследование подхода RAG в интеллектуальных вопросно-ответных системах // Сборник тезисов докладов конгресса молодых ученых. Электронное издание. – СПб: Университет ИТМО, [2025]. URL: https://kmu.itmo.ru/digests/article/16001
+3. Леманов А.А., Скворцов Д.А. (науч. рук. Федоров Д.А.) Проектирование агентных диалоговых систем на примере государственных баз данных с применением технологии rag и llm в рамках задачи text2sql. Электронное издание. – СПб: Университет ИТМО, [2025]. URL: https://kmu.itmo.ru/digests/article/14107
+
+## Exhibition & Media
+This project was presented at the ITMO Scientific Developments Exhibition, showcasing innovations in machine learning for public service applications.
+
+![image](https://github.com/user-attachments/assets/f8a93a35-1bd2-4f27-a8d1-9cef668f3c43)
+![image](https://github.com/user-attachments/assets/c15ca0f3-9117-4749-9e66-a9348e92e6d6)
+[Exhibition Coverage (Telegram)](https://t.me/lisaitmo/165)

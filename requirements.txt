@@ -1,7 +1,6 @@
 numpy
 pandas
 joblib
-jupiter
 torch
 scikit-learn
 transformers
