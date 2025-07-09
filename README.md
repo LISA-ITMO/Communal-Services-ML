@@ -168,13 +168,13 @@ python -m unittest discover -s Tests
 
 | Model Name         | Accuracy@1 | Accuracy@3 | Accuracy@5 | F1 Score | ROC-AUC |
 |--------------------|------------|------------|------------|----------|---------|
-| BERT Base          |            |            |            |          |         |
-| RoBERTa            |            |            |            |          |         |
-| Naive Bayes        |            |            |            |          |         |
-| SVM                |            |            |            |          |         |
-| Decision Tree      |            |            |            |          |         |
-| FastText           |            |            |            |          |         |
-| KNN (optional)     |            |            |            |          |         |
+| BERT Base          |   66.9%    |    85.5%   |  90.5%     |  64.2%   |   92.5% |
+| RuRoBERTa            |   69.9%    |    89.6%   |  95.0%     |  68.5%   |   93.9% |
+| Naive Bayes        |   47.0%    |    71.4%   |  75.4%     |  36.4%   |   76.9% |
+| SVM                |   65.1%    |    82.8%   |  88.2%     |  63.6%   |   90.6% |
+| Decision Tree      |   46.5%    |    54.2%   |  55.0%     |  43.4%   |   70.9% |
+| FastText           |   15.0%    |    26.2%   |  34.3%     |  10.3%   |   62.7% |
+| KNN                |   45.24%   |    71.8%   |  80.2%     |  44.2%   |   -     |
 
 ## Example Usage (from code)
 
@@ -185,6 +185,22 @@ texts = ["There’s been no hot water in our building for a week", ...]
 clf = get_classifier()
 basic_classifier.print_prediction(texts, k=5)
 ```
+
+## Example Service
+The [GitLab project](https://gitlab.com/lisa-itmo/auto-replier) includes a simple interface for testing the model's predictions on individual user-submitted appeals.
+
+![image](https://github.com/user-attachments/assets/63882903-e7e8-4ca4-bf96-4f7d20459265)
+
+### How It Works
+- The user enters an appeal in free form (as text) into the input field.
+
+- The model processes the text and returns top-5 predicted categories with their corresponding probabilities.
+
+- The predictions are displayed in a table that includes:
+
+   - Category name (label predicted by the model)
+
+   - Probability (how confident the model is in each label)
 
 ## Publications
 
